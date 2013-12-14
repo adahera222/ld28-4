@@ -8,6 +8,7 @@ game.resources = [
 	{name: "player", type:"image", src: "./data/img/dude.png"},
 	{name: "sky", type:"image", src: "./data/img/sky.png"},
 	{name: "collision", type:"image", src: "./data/img/collision.png"},
+	{name: "slug", type:"image", src: "./data/img/slug.png"},
 
 	/* Atlases 
 	 * @example
