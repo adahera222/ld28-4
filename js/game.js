@@ -80,8 +80,12 @@ var game = {
 		me.entityPool.add("slug", game.SlugEntity);
 		me.entityPool.add("spike", game.SpikeEntity);
 		me.entityPool.add("bat", game.BatEntity);
+		me.entityPool.add("spider", game.SpiderEntity);
+		me.entityPool.add("fire", game.FireEntity);
+		me.entityPool.add("spark", game.SparkEntity);
 		me.entityPool.add("textTrigger", game.TextTriggerEntity);
 		me.entityPool.add("batWaker", game.BatWakerEntity);
+		me.entityPool.add("shockWizard", me.ObjectEntity);
 
 		me.input.bindKey(me.input.KEY.SPACE, "space", true);
 		this.enableKeys();

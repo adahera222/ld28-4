@@ -2,6 +2,7 @@ var iota = 100;
 var SPIKE_OBJECT = iota++;
 var TEXT_TRIGGER = iota++;
 var BAT_WAKER    = iota++;
+var FIRE         = iota++;
 
 game.PlayerEntity = me.ObjectEntity.extend({
 
@@ -174,6 +175,43 @@ game.BatEntity = me.ObjectEntity.extend({
   }
 });
 
+game.SpiderEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+ 
+    this.updateColRect(4, 24, 6, 10);
+    
+    this.speed = 1;
+    this.gravity = 0.25;
+    
+    this.collidable = true;
+    this.type = me.game.ENEMY_OBJECT;
+    this.hurtpoints = 1;
+  },
+ 
+  update: function() {
+    // if (!this.awake) { return false; }
+    
+    if (!this.jumping && !this.falling) {
+      // On ground. JUMP!
+      var dir = (this.pos.x < game.player_x) ? 1 : -1;
+      var amount = (Math.abs(this.pos.x - game.player_x) > 64) ? 2.5 : 1.2;
+      this.vel.x = dir * amount * me.timer.tick;
+      this.vel.y = -5.0;
+      this.jumping = true;
+    }
+    this.vel.y = Math.min(this.vel.y, 5.0);
+    this.flipX((this.pos.x - game.player_x) < 0);
+    
+    this.updateMovement();
+    
+    this.parent();
+    return true;
+  }
+});
+
 // Used to apply damage from spikes:
 game.SpikeEntity = me.ObjectEntity.extend({
 
@@ -184,6 +222,47 @@ game.SpikeEntity = me.ObjectEntity.extend({
     this.collidable = true;
     this.type = SPIKE_OBJECT;
     this.hurtpoints = 2;
+  }
+});
+
+game.FireEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    this.lastFrame = 0;
+    this.collidable = true;
+    this.type = FIRE;
+    this.hurtpoints = 2;
+  },
+  update: function () {
+    var now = me.timer.getTime();
+    if (now - this.lastFrame > 50) {
+      this.lastFrame = now;
+      this.renderable.setAnimationFrame(Math.floor(Math.random() * 4));
+    }
+    return true;
+  }
+});
+
+game.SparkEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    this.lastFrame = 0;
+  },
+  update: function () {
+    var now = me.timer.getTime();
+    if (now - this.lastFrame > 50) {
+      this.lastFrame = now;
+      var diff = Math.random() < 0.5 ? -1 : 1;
+      var new_idx = (this.renderable.getCurrentAnimationFrame() + diff) % 3;
+      if (new_idx < 0) { new_idx += 3; }
+      console.log(new_idx);
+      this.renderable.setAnimationFrame(new_idx);
+    }
+    return true;
   }
 });
 
