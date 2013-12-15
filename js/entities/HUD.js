@@ -174,11 +174,13 @@ var todays_date = moment().format("MMM D, YYYY:");
 
 TEXT_THINGS.health = new game.HUD.GameNote(96,64, [
 	todays_date,
-	"I have found that my",
-	"immortal blood has a",
-	"healing effect on the",
-	"local mortals. More",
-	"experiments needed...",
 	"",
-	"- Wierdo"
+	"I have found that pints",
+	"of my immortal blood have",
+	"a strong healing effect on",
+	"the mortal beasts of this",
+	"cave. More experiments",
+	"needed...",
+	"",
+	"- Strange Hermit"
 ]);

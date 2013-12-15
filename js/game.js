@@ -92,6 +92,7 @@ var game = {
 		me.entityPool.add("textTrigger", game.TextTriggerEntity);
 		me.entityPool.add("batWaker", game.BatWakerEntity);
 		me.entityPool.add("shockWizard", me.ObjectEntity);
+		me.entityPool.add("healthpotion", game.HealthPotionEntity);
 
 		me.input.bindKey(me.input.KEY.SPACE, "space");
 		this.enableKeys();

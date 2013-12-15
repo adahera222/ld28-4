@@ -3,6 +3,8 @@ var SPIKE_OBJECT = iota++;
 var TEXT_TRIGGER = iota++;
 var BAT_WAKER    = iota++;
 var FIRE         = iota++;
+var HEALTH       = iota++;
+
 
 // Based on level, different things happen when you press [space]:
 function onSpaceCastWater() {
@@ -325,6 +327,16 @@ game.BatWakerEntity = me.ObjectEntity.extend({
     this.collidable = true;
     this.type = BAT_WAKER;
     this.target = settings.batid;
+  }
+});
+
+game.HealthPotionEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    this.parent(x, y, settings);
+ 
+    this.collidable = true;
+    this.type = HEALTH;
   }
 });
 
