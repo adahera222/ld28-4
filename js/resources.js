@@ -17,6 +17,7 @@ game.resources = [
 	{name: "fire",        type:"image", src: "./data/img/fire.png"},
 	{name: "spark",       type:"image", src: "./data/img/sparks.png"},
 	{name: "shockwizard", type:"image", src: "./data/img/shockwizard.png"},
+	{name: "waterpart",   type:"image", src: "./data/img/waterpart.png"},
 
 	/* Atlases 
 	 * @example

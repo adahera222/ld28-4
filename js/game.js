@@ -49,6 +49,8 @@ var game = {
 	"showText" : function (name) {
 		me.event.publish("SHOW_TEXT", [name.toLowerCase()]);
 	},
+	
+	keysEnabled: false,
 
 	enableKeys: function () {
 		// Arrows:
@@ -60,6 +62,8 @@ var game = {
 		me.input.bindKey(me.input.KEY.A, "left");
 		me.input.bindKey(me.input.KEY.D, "right");
 		me.input.bindKey(me.input.KEY.W, "jump", true);
+
+		this.keysEnabled = true;
 	},
 
 	disableKeys: function () {
@@ -69,6 +73,8 @@ var game = {
 		me.input.unbindKey(me.input.KEY.A);
 		me.input.unbindKey(me.input.KEY.D);
 		me.input.unbindKey(me.input.KEY.W);
+
+		this.keysEnabled = false;
 	},
 
 	// Run on game resources loaded.
@@ -87,7 +93,7 @@ var game = {
 		me.entityPool.add("batWaker", game.BatWakerEntity);
 		me.entityPool.add("shockWizard", me.ObjectEntity);
 
-		me.input.bindKey(me.input.KEY.SPACE, "space", true);
+		me.input.bindKey(me.input.KEY.SPACE, "space");
 		this.enableKeys();
 
 		// Start the game.
