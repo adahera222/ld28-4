@@ -305,5 +305,20 @@
     <property name="to" value="level3"/>
    </properties>
   </object>
+  <object name="textTrigger" x="240" y="1536" width="64" height="48">
+   <properties>
+    <property name="target" value="magic_instruction"/>
+   </properties>
+  </object>
+  <object name="textTrigger" x="608" y="1232" width="48" height="48">
+   <properties>
+    <property name="target" value="enemy_push"/>
+   </properties>
+  </object>
+  <object name="textTrigger" x="96" y="880" width="32" height="32">
+   <properties>
+    <property name="target" value="shock_dude"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>

@@ -299,7 +299,6 @@ game.SparkEntity = me.ObjectEntity.extend({
       var diff = Math.random() < 0.5 ? -1 : 1;
       var new_idx = (this.renderable.getCurrentAnimationFrame() + diff) % 3;
       if (new_idx < 0) { new_idx += 3; }
-      console.log(new_idx);
       this.renderable.setAnimationFrame(new_idx);
     }
     return true;
