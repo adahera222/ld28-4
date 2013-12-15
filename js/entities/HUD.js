@@ -60,6 +60,7 @@ game.HUD.GameNote = me.Renderable.extend({
 
 	start: function () {
 		
+		game.disableKeys();
 		this.skippable = false;
 		this.changed = false;
 		this.showend = false;
@@ -79,6 +80,7 @@ game.HUD.GameNote = me.Renderable.extend({
 	update : function () {
 		if (this.visible && this.skippable && me.input.isKeyPressed("space")) {
 			this.visible = false;
+			game.enableKeys();
 			return true;
 		}
 		if (this.changed) {
@@ -161,8 +163,9 @@ TEXT_THINGS.intro = new game.HUD.GameNote(96,64, [
 	"I need to meet with you.",
 	"I can help with your...",
 	"condition...",
+	"",
 	"I'm on the mountain for",
-	"some reason.",
+	"some reason. Go there.",
 	"",
 	"- Wizard"
 ]);

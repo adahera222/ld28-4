@@ -1,6 +1,7 @@
 var iota = 100;
 var SPIKE_OBJECT = iota++;
 var TEXT_TRIGGER = iota++;
+var BAT_WAKER    = iota++;
 
 game.PlayerEntity = me.ObjectEntity.extend({
 
@@ -9,11 +10,11 @@ game.PlayerEntity = me.ObjectEntity.extend({
     this.parent(x, y, settings);
  
     // set the default horizontal & vertical speed (accel vector)
-    this.setVelocity(1.8, 5);
+    this.setVelocity(1.8, 5.2);
     this.gravity =0.25;
     
     // this.lol = 0;
-    this.updateColRect(2, 12, 2, 30);
+    this.updateColRect(2, 12, 3, 29);
 
     // set the display to follow our position on both axis
     me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
@@ -46,6 +47,9 @@ game.PlayerEntity = me.ObjectEntity.extend({
         collide.obj.collidable = false; // Only once;
         game.showText(collide.obj.target);
       }
+      if (collide.obj.type == BAT_WAKER) {
+        me.event.publish("BAT_WAKE:" + collide.obj.target, []);
+      }
       if (collide.obj.type == me.game.ENEMY_OBJECT) {
         this.renderable.flicker(40);
         console.log("OUCH, BITCH");
@@ -57,8 +61,10 @@ game.PlayerEntity = me.ObjectEntity.extend({
       
     }
 
+    this.parent();
+    game.updatePlayerPos(this);
+    
     if (this.vel.x!=0 || this.vel.y!=0) {
-      this.parent();
       return true;
     }
 
@@ -73,22 +79,17 @@ game.SlugEntity = me.ObjectEntity.extend({
     this.parent(x, y, settings);
  
     this.updateColRect(0, 32, 4, 12);
-    this.lbound = this.pos.x - 32;
-    this.rbound = this.pos.x + 32;
+    this.range = settings.range || 32;
+    this.lbound = this.pos.x - this.range;
+    this.rbound = this.pos.x + this.range;
 
     this.dir = Math.random() < 0.5 ? -1 : 1;
     this.speed = 0.6;
 
     this.collidable = true;
     this.type = me.game.ENEMY_OBJECT;
+    this.hurtpoints = 2;
   },
-
-  // draw: function (ctx) {
-  //   var saved = this.pos.y;
-  //   this.pos.y -= 8 * Math.abs(Math.sin(this.lol * 0.08));
-  //   this.parent(ctx);
-  //   this.pos.y = saved;
-  // },
  
   update: function() {
     
@@ -108,6 +109,70 @@ game.SlugEntity = me.ObjectEntity.extend({
     return true;
   }
 });
+                                
+game.BatEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+ 
+    this.updateColRect(2, 12, 2, 12);
+    
+    this.speed = 1;
+    this.gravity = 0;
+    this.awake = false;
+
+    this.collidable = true;
+    this.type = me.game.ENEMY_OBJECT;
+    this.hurtpoints = 1;
+    this.falling = settings.falldist;
+
+    var self = this;
+
+    this.flyanim = new me.AnimationSheet(0, 0, me.loader.getImage("batfly"), 16, 16, 0, 0)
+
+    me.event.subscribe("BAT_WAKE:" + settings.batid, function () {
+      self.renderable = self.flyanim;
+      self.awake = true;
+    });
+  },
+ 
+  update: function() {
+    if (!this.awake) { return false; }
+    
+    if (this.falling > 0) {
+      
+      this.vel.x = 0;
+      this.vel.y += 0.2 * me.timer.tick;
+
+      this.falling -= this.vel.y;
+
+      this.updateMovement();
+      
+      return true;
+    }
+
+    var vel = me.timer.tick * this.speed;
+
+    // Get a quick direction:
+    this.vel.x = vel * (this.pos.x < game.player_x ? 1 : -1);
+    this.vel.y = vel * (this.pos.y < game.player_y ? 1 : -1);
+
+    // Make the direction zero if close:
+    if (Math.abs(this.pos.x - game.player_x) < 4) { this.vel.x = 0; }
+    if (Math.abs(this.pos.y - game.player_y) < 4) { this.vel.y = 0; }
+    
+    // Occasionally fuck with the y vel to make it more 'bat' like:
+    if (Math.random() < 0.15) { this.vel.y = Math.random() * 6 - 3; }
+
+    this.flipX(this.vel.x > 0);
+    
+    this.updateMovement();
+    
+    this.parent();
+    return true;
+  }
+});
 
 // Used to apply damage from spikes:
 game.SpikeEntity = me.ObjectEntity.extend({
@@ -118,6 +183,7 @@ game.SpikeEntity = me.ObjectEntity.extend({
  
     this.collidable = true;
     this.type = SPIKE_OBJECT;
+    this.hurtpoints = 2;
   }
 });
 
@@ -131,5 +197,17 @@ game.TextTriggerEntity = me.ObjectEntity.extend({
     this.collidable = true;
     this.type = TEXT_TRIGGER;
     this.target = settings.target;
+  }
+});
+
+game.BatWakerEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+ 
+    this.collidable = true;
+    this.type = BAT_WAKER;
+    this.target = settings.batid;
   }
 });

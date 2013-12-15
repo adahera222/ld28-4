@@ -4,11 +4,13 @@ game.resources = [
 	 * @example
 	 * {name: "example", type:"image", src: "data/img/example.png"},
 	 */
-	{name: "tileset", type:"image", src: "./data/img/tileset.png"},
-	{name: "player", type:"image", src: "./data/img/dude.png"},
-	{name: "sky", type:"image", src: "./data/img/sky.png"},
+	{name: "tileset",   type:"image", src: "./data/img/tileset.png"},
+	{name: "player",    type:"image", src: "./data/img/dude.png"},
+	{name: "sky",       type:"image", src: "./data/img/sky.png"},
 	{name: "collision", type:"image", src: "./data/img/collision.png"},
-	{name: "slug", type:"image", src: "./data/img/slug.png"},
+	{name: "slug",      type:"image", src: "./data/img/slug.png"},
+	{name: "batsleep",  type:"image", src: "./data/img/batsleep.png"},
+	{name: "batfly",    type:"image", src: "./data/img/batfly.png"},
 
 	/* Atlases 
 	 * @example
