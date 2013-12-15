@@ -26,6 +26,7 @@ game.HUD.Container = me.ObjectContainer.extend({
     this.name = "HUD";
     
     var self = this;
+    this.addChild(new game.HUD.HealthItem(4, 4));
 
     // add our child score object at the top left corner
     me.event.subscribe("SHOW_TEXT", function (name) {
@@ -170,41 +171,72 @@ game.HUD.PassiveNote = me.Renderable.extend({
 /** 
  * a basic HUD item to display score
  */
-game.HUD.ScoreItem = me.Renderable.extend({  
-  /** 
-   * constructor
-   */
+game.HUD.HealthItem = me.Renderable.extend({  
   init: function(x, y) {
-    
     // call the parent constructor 
     // (size does not matter here)
     this.parent(new me.Vector2d(x, y), 10, 10); 
     
+    this.img = me.loader.getImage("hearts");
+    
     // local copy of the global score
-    this.score = -1;
+    this.health = -1;
 
     // make sure we use screen coordinates
     this.floating = true;
   },
 
-  /**
-   * update function
-   */
   update : function () {
-    // we don't do anything fancy here, so just
-    // return true if the score has been updated
-    if (this.score !== game.data.score) {  
-      this.score = game.data.score;
+    if (this.health !== game.data.health) {  
+      this.health = game.data.health;
       return true;
     }
     return false;
   },
 
-  /**
-   * draw the score
-   */
+  drawHeart: function (context, idx, val) {
+  	switch(val) {
+  		case 2:
+  			context.drawImage(
+  				this.img, 
+  				0, 0, 
+  				16, 16, 
+  				16 * idx, 0,
+  				16, 16
+  			);
+  			break;
+
+  		case 1:
+  			context.drawImage(
+  				this.img, 
+  				16, 0, 
+  				16, 16, 
+  				16 * idx, 0,
+  				16, 16
+  			);
+  			break;
+
+  		case 0:
+  			context.drawImage(
+  				this.img, 
+  				32, 0, 
+  				16, 16, 
+  				16 * idx, 0,
+  				16, 16
+  			);
+  			break;
+  	}
+  },
+
   draw : function (context) {
-    // draw it baby !
+  	this.heath = game.data.health;
+  	var h = this.health;
+    for (var idx=0; idx<4; idx ++) {
+    	var val = h - idx * 2;
+    	if (val <= 0) { val = 0; }
+    	if (val >= 2) { val = 2; }
+    	this.drawHeart(context, idx, val);
+    }
   }
 
 });
@@ -259,3 +291,108 @@ TEXT_THINGS.enemy_push = new game.HUD.PassiveNote(540, 1160, [
 TEXT_THINGS.shock_dude = new game.HUD.PassiveNote(76, 840, [
 	"Magic is fun!"
 ], 1500);
+
+TEXT_THINGS.immortal_asshole_a = new game.HUD.PassiveNote(160, 64, [
+	"Oh, hey there, mortal!"
+], 1500);
+
+TEXT_THINGS.immortal_asshole_b = new game.HUD.PassiveNote(160, 64, [
+	"How are you?"
+], 1500);
+
+TEXT_THINGS.immortal_asshole_c = new game.HUD.PassiveNote(160, 64, [
+	"You know it's funny..."
+], 1500);
+
+TEXT_THINGS.immortal_asshole_d = new game.HUD.PassiveNote(160, 64, [
+	"Everyone else in this town has as many lives",
+	"as they need..."
+], 3500);
+
+TEXT_THINGS.immortal_asshole_e = new game.HUD.PassiveNote(160, 64, [
+	"But you..."
+], 1500);
+
+TEXT_THINGS.immortal_asshole_f = new game.HUD.PassiveNote(160, 64, [
+	"YOU only get one."
+], 1500);
+
+TEXT_THINGS.immortal_asshole_last = new game.HUD.PassiveNote(180, 64, [
+	"HA ha ha!"
+], 1500);
+
+TEXT_THINGS.magic_asshole_a = new game.HUD.PassiveNote(164, 1530, [
+	"The people in these parts..."
+], 1500);
+
+TEXT_THINGS.magic_asshole_b = new game.HUD.PassiveNote(164, 1530, [
+	"They have a mastery of all the elements"
+], 1700);
+
+TEXT_THINGS.magic_asshole_c = new game.HUD.PassiveNote(164, 1530, [
+	"...of the arcane"
+], 1500);
+
+TEXT_THINGS.magic_asshole_d = new game.HUD.PassiveNote(164, 1530, [
+	"... and the ..."
+], 1500);
+
+TEXT_THINGS.magic_asshole_e = new game.HUD.PassiveNote(164, 1530, [
+	"OH!"
+], 1500);
+
+
+TEXT_THINGS.magic_asshole_f = new game.HUD.PassiveNote(164, 1530, [
+	"How quaint..."
+], 1500);
+
+
+TEXT_THINGS.magic_asshole_g = new game.HUD.PassiveNote(164, 1530, [
+	"It seems you've only mastered one element..."
+], 2000);
+
+
+TEXT_THINGS.magic_asshole_h = new game.HUD.PassiveNote(164, 1530, [
+	"LOL!"
+], 1500);
+
+TEXT_THINGS.magic_asshole_final = new game.HUD.PassiveNote(96, 1530, [
+	"Learned WATER MAGIC!"
+], 1500);
+
+TEXT_THINGS.summon_asshole = new game.HUD.PassiveNote(525, 420, [
+	"Well, this is awkward..."
+], 1500);
+
+
+TEXT_THINGS.snob_a = new game.HUD.PassiveNote(750, 810, [
+	"Not now. Eating."
+], 1000);
+
+TEXT_THINGS.snob_b = new game.HUD.PassiveNote(720, 810, [
+	"Sorry. No money."
+], 1000);
+
+TEXT_THINGS.snob_c = new game.HUD.PassiveNote(687, 810, [
+	"Go away"
+], 1000);
+
+TEXT_THINGS.snob_d = new game.HUD.PassiveNote(658, 810, [
+	"..."
+], 1000);
+
+TEXT_THINGS.snob_e = new game.HUD.PassiveNote(592, 810, [
+	"Eww. A poor person."
+], 1000);
+
+TEXT_THINGS.snob_f = new game.HUD.PassiveNote(557, 810, [
+	"Get a job"
+], 1000);
+
+TEXT_THINGS.snob_g = new game.HUD.PassiveNote(525, 810, [
+	"Om nom nom"
+], 1000);
+
+TEXT_THINGS.snob_h = new game.HUD.PassiveNote(498, 810, [
+	"Why are you talking to me?"
+], 1000);

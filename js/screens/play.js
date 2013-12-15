@@ -5,13 +5,15 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	onResetEvent: function() {
 
-		me.levelDirector.loadLevel("level1");
+		me.levelDirector.loadLevel("level3");
 
 		// add our HUD to the game world
 		this.HUD = new game.HUD.Container();
 		
-		// Hack, cause a leve change doesn't trigger any events that I
+		// Hack, cause a level change doesn't trigger any events that I
 	  // know about... :X
+	  // NOTE @melon.js devs: That'd be useful, cause many non-persistent
+	  // entities need to be re-added to the new level at that point...
 	  var self = this;
 	  game.resetParticles = function () {
 			// Called when the player is added:
@@ -30,7 +32,5 @@ game.PlayScreen = me.ScreenObject.extend({
 		console.log("DESTROY");
 		// remove the HUD from the game world
 		me.game.world.removeChild(this.HUD);
-		me.game.world.removeChild(game.Particles);
-		this.Particles = null;
 	}
 });

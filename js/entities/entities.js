@@ -4,7 +4,9 @@ var TEXT_TRIGGER = iota++;
 var BAT_WAKER    = iota++;
 var FIRE         = iota++;
 var HEALTH       = iota++;
+var CUTSCENE     = iota++;
 
+game.CUTSCENE = CUTSCENE; // Just to be sure
 
 // Based on level, different things happen when you press [space]:
 function onSpaceCastWater() {
@@ -19,6 +21,13 @@ function onSpaceCastWater() {
 }
 
 game.PlayerEntity = me.ObjectEntity.extend({
+  giveWater: function () {
+    this.spaceAction = onSpaceCastWater;
+  },
+  
+  takeWater: function () {
+    this.spaceAction = null;
+  },
 
   init: function(x, y, settings) {
     // call the constructor
@@ -27,8 +36,9 @@ game.PlayerEntity = me.ObjectEntity.extend({
     this.didMakeParticles = false;
 
     this.nextSpace = 0;
-    this.spaceAction = onSpaceCastWater; //null;
+    this.spaceAction =onSpaceCastWater; //null;
     this.dir = 1;
+    this.isFlickering = false;
 
     // set the default horizontal & vertical speed (accel vector)
     this.setVelocity(1.8, 5.2);
@@ -41,6 +51,27 @@ game.PlayerEntity = me.ObjectEntity.extend({
     me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
   },
 
+  hurt: function (amt) {
+    var BACKOFF = 1500;
+    
+    if (this.isFlickering) { return; }
+
+    this.isFlickering = true;
+    var self = this;
+    this.renderable.flicker(60 * BACKOFF / 1000, function () {
+      self.isFlickering = false;
+    });
+    game.data.health -= amt;
+
+    if (game.data.health <= 0) {
+      me.game.viewport.shake(6, 500);
+      game.disableKeys();
+      me.game.viewport.fadeIn("red", 500, function () {
+        me.state.change(me.state.GAMEOVER);
+      });
+    }
+  },
+  
   update: function() {
     
     if (!this.didMakeParticles) {
@@ -84,19 +115,25 @@ game.PlayerEntity = me.ObjectEntity.extend({
         game.showText(collide.obj.target);
       }
       if (collide.obj.type == BAT_WAKER) {
-        me.event.publish("BAT_WAKE:" + collide.obj.target, []);
+        me.event.publish("WAKE:" + collide.obj.target, []);
       }
       if (collide.obj.type == me.game.ENEMY_OBJECT) {
-        this.renderable.flicker(40);
-        console.log("OUCH, BITCH");
+        this.hurt(collide.obj.hurtpoints);
       }
       if (collide.obj.type == SPIKE_OBJECT) {
-        this.renderable.flicker(40);
-        console.log("FUCKING SPIKES");
+        this.hurt(collide.obj.hurtpoints);
       }
       if (collide.obj.type == FIRE) {
-        this.renderable.flicker(40);
-        console.log("OW FIRE");
+        this.hurt(collide.obj.hurtpoints);
+      }
+      if (collide.obj.type == HEALTH) {
+        me.game.viewport.shake(4, 300);
+        collide.obj.visible = false;
+        collide.obj.collidable = false;
+        game.data.health = 8;
+      }
+      if (collide.obj.type == CUTSCENE) {
+        collide.obj.startScene(this);
       }
       
     }
@@ -104,7 +141,11 @@ game.PlayerEntity = me.ObjectEntity.extend({
     this.parent();
     game.updatePlayerPos(this);
     
-    if (this.vel.x!=0 || this.vel.y!=0) {
+    if (this.vel.x ==0 ) {
+      this.renderable.setAnimationFrame(0);
+    }
+
+    if (this.isFlickering || this.vel.x!=0 || this.vel.y!=0) {
       return true;
     }
 
@@ -171,7 +212,7 @@ game.BatEntity = me.ObjectEntity.extend({
 
     this.flyanim = new me.AnimationSheet(0, 0, me.loader.getImage("batfly"), 16, 16, 0, 0);
 
-    me.event.subscribe("BAT_WAKE:" + settings.batid, function () {
+    me.event.subscribe("WAKE:" + settings.batid, function () {
       self.renderable = self.flyanim;
       self.awake = true;
     });
@@ -224,14 +265,21 @@ game.SpiderEntity = me.ObjectEntity.extend({
     
     this.speed = 1;
     this.gravity = 0.25;
-    
+    this.awake = Boolean(settings.awake);
+    this.visible = (settings.visible !== undefined) ? settings.visible : true;
+
+    var self = this;
+    me.event.subscribe("WAKE:" + settings.spiderid, function () {
+      self.awake = true;
+    });
+
     this.collidable = true;
     this.type = me.game.ENEMY_OBJECT;
     this.hurtpoints = 1;
   },
- 
+  
   update: function() {
-    // if (!this.awake) { return false; }
+    if (!this.awake || !this.visible) { return false; }
     
     if (!this.jumping && !this.falling) {
       // On ground. JUMP!
@@ -318,6 +366,20 @@ game.TextTriggerEntity = me.ObjectEntity.extend({
   }
 });
 
+// Used to trigger notes and the such:
+game.TriggerSummonEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+ 
+    this.collidable = true;
+    this.type = CUTSCENE;
+    this.target = settings.target;
+  }
+});
+
+// HACK: This wakes more than just bats... :X
 game.BatWakerEntity = me.ObjectEntity.extend({
 
   init: function(x, y, settings) {
@@ -398,6 +460,35 @@ game.WaterParticle = me.ObjectEntity.extend({
       }
     }
     this.parent();
+    return true;
+  }
+});
+
+game.SpiderParticle = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    
+    this.renderable = new me.AnimationSheet(0, 0, me.loader.getImage("spider"), 32, 16, 0, 0);;
+
+    this.gravity = 0.25;
+
+    this.vel.x = Math.random() * 4 - 2;
+    this.vel.y = 0;
+    this.renderable.flicker(2000);
+
+    var self = this;
+    setTimeout(function () {
+      self.visible = false;
+      self.collidable = false;
+      self.removeParticle();
+    }, 2000);
+  },
+  update: function () {
+    this.updateMovement();
+    this.parent();
+
     return true;
   }
 });

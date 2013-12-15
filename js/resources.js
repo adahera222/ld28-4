@@ -20,6 +20,10 @@ game.resources = [
 	{name: "shockwizard",  type:"image", src: "./data/img/shockwizard.png"},
 	{name: "waterpart",    type:"image", src: "./data/img/waterpart.png"},
 	{name: "healthpotion", type:"image", src: "./data/img/healthpotion.png"},
+	{name: "hearts",       type:"image", src: "./data/img/hearts.png"},
+  {name: "immortalAsshole", type:"image", src: "./data/img/immortalasshole.png"},
+  {name: "magicAsshole", type:"image", src: "./data/img/magicasshole.png"},
+  {name: "fatAsshole", type:"image", src: "./data/img/fatasshole.png"},
 
 	/* Atlases 
 	 * @example

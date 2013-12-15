@@ -4,8 +4,7 @@ var game = {
 
 	// an object where to store game information
 	data : {
-		// score
-		score : 0
+		health : 8
 	},
 	
 	// We cache player position here, so other things can track it:
@@ -81,6 +80,7 @@ var game = {
 	"loaded" : function () {
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
+		me.state.set(me.state.GAMEOVER, new game.GameOverScreen());
 
 		me.entityPool.add("mainPlayer", game.PlayerEntity);
 		me.entityPool.add("slug", game.SlugEntity);
@@ -90,9 +90,16 @@ var game = {
 		me.entityPool.add("fire", game.FireEntity);
 		me.entityPool.add("spark", game.SparkEntity);
 		me.entityPool.add("textTrigger", game.TextTriggerEntity);
+		me.entityPool.add("triggerSummons", game.TriggerSummonEntity);
 		me.entityPool.add("batWaker", game.BatWakerEntity);
 		me.entityPool.add("shockWizard", me.ObjectEntity);
 		me.entityPool.add("healthpotion", game.HealthPotionEntity);
+
+		me.entityPool.add("immortalAsshole", game.ImmortalAssholeEntity);
+		me.entityPool.add("magicAsshole", game.MagicAssholeEntity);
+		me.entityPool.add("summonAsshole", game.SummonAssholeEntity);
+		me.entityPool.add("fatAsshole", game.FatAssholeEntity);
+		me.entityPool.add("confiscateDude", game.ConfiscateDudeEntity);
 
 		me.input.bindKey(me.input.KEY.SPACE, "space");
 		this.enableKeys();
