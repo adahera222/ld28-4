@@ -396,3 +396,54 @@ TEXT_THINGS.snob_g = new game.HUD.PassiveNote(525, 810, [
 TEXT_THINGS.snob_h = new game.HUD.PassiveNote(498, 810, [
 	"Why are you talking to me?"
 ], 1000);
+
+
+TEXT_THINGS.confiscate_a = new game.HUD.PassiveNote(220, 720, [
+	"Whoa, whoa!"
+], 1000);
+
+TEXT_THINGS.confiscate_b = new game.HUD.PassiveNote(220, 720, [
+	"Hey, now"
+], 1000);
+
+TEXT_THINGS.confiscate_c = new game.HUD.PassiveNote(220, 720, [
+	"None of that magic stuff in here!"
+], 1500);
+
+TEXT_THINGS.confiscate_d = new game.HUD.PassiveNote(220, 720, [
+	"We have all the money in the world..."
+], 1500);
+
+TEXT_THINGS.confiscate_e = new game.HUD.PassiveNote(220, 720, [
+	"and we aren't too keen on being doused",
+	"by magic water"
+], 2500);
+
+TEXT_THINGS.confiscate_f = new game.HUD.PassiveNote(220, 720, [
+	"BTW: Passage is 2 coins"
+], 1500);
+
+TEXT_THINGS.confiscate_g = new game.HUD.PassiveNote(220, 720, [
+	"What? You don't have any coins?"
+], 1750);
+
+TEXT_THINGS.confiscate_h = new game.HUD.PassiveNote(220, 720, [
+	"Well, I have millions of coins..."
+], 1750);
+
+TEXT_THINGS.confiscate_i = new game.HUD.PassiveNote(220, 720, [
+	"But you can only have... ONE..."
+], 2000);
+
+TEXT_THINGS.confiscate_j = new game.HUD.PassiveNote(180, 720, [
+	"Received 1 COIN"
+], 1500);
+
+TEXT_THINGS.boss_start = new game.HUD.PassiveNote(528, 1480, [
+	"Hey! How dare you interupt a perfectly",
+	"good food coma!"
+], 2500);
+
+TEXT_THINGS.boss_instr = new game.HUD.PassiveNote(528, 1525, [
+	"Press [space] here to catapult food"
+], 2500);

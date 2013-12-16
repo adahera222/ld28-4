@@ -5,8 +5,13 @@ var BAT_WAKER    = iota++;
 var FIRE         = iota++;
 var HEALTH       = iota++;
 var CUTSCENE     = iota++;
+var BONE         = iota++;
+var PASTRY       = iota++;
 
-game.CUTSCENE = CUTSCENE; // Just to be sure
+// Theres are used elsewhere.
+game.CUTSCENE = CUTSCENE;
+game.BONE = BONE;
+game.PASTRY = PASTRY;
 
 // Based on level, different things happen when you press [space]:
 function onSpaceCastWater() {
@@ -20,6 +25,29 @@ function onSpaceCastWater() {
   game.ParticleManager.addParticle(new_one);
 }
 
+// Sigh. HAAAACK
+function onSpaceThrowPastry() {
+  var now = me.timer.getTime();
+
+  var dx = this.pos.x - 625;
+  var dy = this.pos.y - 1536;
+  var dist2 = dx * dx + dy * dy;
+
+  if (dist2 > 16 * 16) { return; } // Too far.
+  if (this.nextSpace > now) { return; }
+
+  this.nextSpace = now + 1000;
+  var new_one = new game.PastryParticle(
+    625,
+    1536,
+    {}
+  );
+  new_one.vel.x = Math.random() - 0.5;
+  new_one.vel.y = -8;
+  game.ParticleManager.addParticle(new_one);
+}
+
+
 game.PlayerEntity = me.ObjectEntity.extend({
   giveWater: function () {
     this.spaceAction = onSpaceCastWater;
@@ -29,6 +57,10 @@ game.PlayerEntity = me.ObjectEntity.extend({
     this.spaceAction = null;
   },
 
+  givePastry: function () {
+    this.spaceAction = onSpaceThrowPastry;
+  },
+
   init: function(x, y, settings) {
     // call the constructor
     this.parent(x, y, settings);
@@ -36,7 +68,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
     this.didMakeParticles = false;
 
     this.nextSpace = 0;
-    this.spaceAction =onSpaceCastWater; //null;
+    this.spaceAction =onSpaceThrowPastry; //onSpaceCastWater; //null;
     this.dir = 1;
     this.isFlickering = false;
 
@@ -115,6 +147,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
         game.showText(collide.obj.target);
       }
       if (collide.obj.type == BAT_WAKER) {
+        collide.obj.collidable = false;
         me.event.publish("WAKE:" + collide.obj.target, []);
       }
       if (collide.obj.type == me.game.ENEMY_OBJECT) {
@@ -124,6 +157,9 @@ game.PlayerEntity = me.ObjectEntity.extend({
         this.hurt(collide.obj.hurtpoints);
       }
       if (collide.obj.type == FIRE) {
+        this.hurt(collide.obj.hurtpoints);
+      }
+      if (collide.obj.type == BONE) {
         this.hurt(collide.obj.hurtpoints);
       }
       if (collide.obj.type == HEALTH) {
@@ -474,7 +510,7 @@ game.SpiderParticle = me.ObjectEntity.extend({
 
     this.gravity = 0.25;
 
-    this.vel.x = Math.random() * 4 - 2;
+    //this.vel.x = Math.random() * 4 - 2;
     this.vel.y = 0;
     this.renderable.flicker(2000);
 

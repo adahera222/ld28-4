@@ -100,6 +100,7 @@ var game = {
 		me.entityPool.add("summonAsshole", game.SummonAssholeEntity);
 		me.entityPool.add("fatAsshole", game.FatAssholeEntity);
 		me.entityPool.add("confiscateDude", game.ConfiscateDudeEntity);
+		me.entityPool.add("boss", game.BossEntity);
 
 		me.input.bindKey(me.input.KEY.SPACE, "space");
 		this.enableKeys();

@@ -23,7 +23,12 @@ game.resources = [
 	{name: "hearts",       type:"image", src: "./data/img/hearts.png"},
   {name: "immortalAsshole", type:"image", src: "./data/img/immortalasshole.png"},
   {name: "magicAsshole", type:"image", src: "./data/img/magicasshole.png"},
-  {name: "fatAsshole", type:"image", src: "./data/img/fatasshole.png"},
+  {name: "fatAsshole",   type:"image", src: "./data/img/fatasshole.png"},
+  {name: "boss",         type:"image", src: "./data/img/boss.png"},
+  {name: "bone",         type:"image", src: "./data/img/bone.png"},
+  {name: "pastry",       type:"image", src: "./data/img/pastry.png"},
+  {name: "gib",          type:"image", src: "./data/img/gib.png"},
+
 
 	/* Atlases 
 	 * @example

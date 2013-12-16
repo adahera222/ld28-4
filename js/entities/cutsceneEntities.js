@@ -237,3 +237,66 @@ game.TriggerSummonEntity = me.ObjectEntity.extend({
     return true;
   }
 });
+
+game.ConfiscateDudeEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    
+    this.timed_strings = [
+      ["confiscate_a", 1250],
+      ["confiscate_b", 1250],
+      ["confiscate_c", 1750],
+      ["confiscate_d", 1750],
+      ["confiscate_e", 2750],
+      ["confiscate_f", 1750],
+      ["confiscate_g", 2000],
+      ["confiscate_h", 2000],
+      ["confiscate_i", 2250],
+      ["confiscate_j", 1750],
+    ];
+
+    this.updateColRect(0, 16, -32, 64);
+    this.gravity = 0.25;
+
+    this.collidable = true;
+    this.type = game.CUTSCENE;
+
+    this.started = false;
+  },
+
+  startScene: function (player) {
+    if (this.started) { return; }
+    this.started = true;
+
+    game.disableKeys();
+    player.vel.x = 0;
+    player.givePastry();
+
+    // Yay, async recursion! :D
+    var self = this;
+    function nextString() {
+      if (!self.timed_strings.length) {
+        setTimeout(destroy, 500);
+        return;
+      }
+      var data = self.timed_strings.shift();
+      game.showText(data[0]);
+      setTimeout(nextString, data[1]);
+    }
+
+    function destroy() {
+      self.collidable = false;
+      game.enableKeys();
+    }
+
+    nextString();
+  },
+  
+  update: function() {
+    if (!this.started || !this.collidable) { return false; }
+
+    return true;
+  }
+});

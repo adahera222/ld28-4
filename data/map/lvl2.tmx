@@ -326,7 +326,7 @@
     <property name="batid" value="firstone"/>
    </properties>
   </object>
-  <object name="fire" x="112" y="880" width="16" height="32">
+  <object name="fire" x="224" y="880" width="16" height="32">
    <properties>
     <property name="image" value="fire"/>
     <property name="spritewidth" value="16"/>
@@ -343,5 +343,10 @@
    </properties>
   </object>
   <object name="triggerSummons" x="320" y="416" width="16" height="80"/>
+  <object name="healthpotion" x="208" y="480" width="16" height="16">
+   <properties>
+    <property name="image" value="healthpotion"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
