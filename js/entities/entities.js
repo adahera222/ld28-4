@@ -7,6 +7,9 @@ var HEALTH       = iota++;
 var CUTSCENE     = iota++;
 var BONE         = iota++;
 var PASTRY       = iota++;
+var DOOR         = iota++;
+var TELEPORT     = iota++;
+var GAME_ENDER   = iota++;
 
 // Theres are used elsewhere.
 game.CUTSCENE = CUTSCENE;
@@ -68,7 +71,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
     this.didMakeParticles = false;
 
     this.nextSpace = 0;
-    this.spaceAction =onSpaceThrowPastry; //onSpaceCastWater; //null;
+    this.spaceAction = null;
     this.dir = 1;
     this.isFlickering = false;
 
@@ -171,7 +174,26 @@ game.PlayerEntity = me.ObjectEntity.extend({
       if (collide.obj.type == CUTSCENE) {
         collide.obj.startScene(this);
       }
-      
+      if (collide.obj.type == DOOR) {
+        this.pos.x -= this.vel.x;
+        // Bump.
+      }
+      if (collide.obj.type == TELEPORT) {
+        var self = this;
+        me.game.viewport.shake(6, 500);
+        me.game.viewport.fadeIn("yellow", 500, function () {
+          self.pos.x = collide.obj.dest.x;
+          self.pos.y = collide.obj.dest.y;
+          self.vel.x = 0;
+          self.vel.y = 0;
+          me.game.viewport.fadeOut("yellow", 200);
+        });
+      }
+      if (collide.obj.type == GAME_ENDER) {
+        me.game.viewport.fadeIn("white", 1000, function () {
+          me.state.change(me.state.GAME_END);
+        });
+      }
     }
 
     this.parent();
@@ -526,5 +548,50 @@ game.SpiderParticle = me.ObjectEntity.extend({
     this.parent();
 
     return true;
+  }
+});
+
+game.DoorEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    this.collidable = true;
+    this.type = DOOR;
+
+    var self = this;
+    me.event.subscribe("UNLOCK:" + settings.unlock, function () {
+      self.renderable.flicker(30, function () {
+        self.collidable = false;
+        self.visible = false;
+      });
+    });
+  },
+  update: function () {
+    this.parent();
+    return true;
+  }
+});
+
+game.TeleportEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    
+    this.collidable = true;
+    this.type = TELEPORT;
+    this.dest = {x: settings.placex, y: settings.placey};
+  }
+});
+
+game.GameEnderEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    
+    this.collidable = true;
+    this.type = GAME_ENDER;
   }
 });

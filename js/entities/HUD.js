@@ -447,3 +447,9 @@ TEXT_THINGS.boss_start = new game.HUD.PassiveNote(528, 1480, [
 TEXT_THINGS.boss_instr = new game.HUD.PassiveNote(528, 1525, [
 	"Press [space] here to catapult food"
 ], 2500);
+
+TEXT_THINGS.last_coin = new game.HUD.PassiveNote(300, 1455, [
+	"Received 1 COIN",
+	"",
+	"The thing on the left is a teleporter. Use it."
+], 2500);

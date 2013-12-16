@@ -28,6 +28,8 @@ game.resources = [
   {name: "bone",         type:"image", src: "./data/img/bone.png"},
   {name: "pastry",       type:"image", src: "./data/img/pastry.png"},
   {name: "gib",          type:"image", src: "./data/img/gib.png"},
+  {name: "door",         type:"image", src: "./data/img/door.png"},
+  {name: "endinga",      type:"image", src: "./data/img/endinga.png"},
 
 
 	/* Atlases 

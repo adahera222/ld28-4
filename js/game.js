@@ -81,6 +81,7 @@ var game = {
 		me.state.set(me.state.MENU, new game.TitleScreen());
 		me.state.set(me.state.PLAY, new game.PlayScreen());
 		me.state.set(me.state.GAMEOVER, new game.GameOverScreen());
+		me.state.set(me.state.GAME_END, new game.EndingScreen());
 
 		me.entityPool.add("mainPlayer", game.PlayerEntity);
 		me.entityPool.add("slug", game.SlugEntity);
@@ -101,6 +102,11 @@ var game = {
 		me.entityPool.add("fatAsshole", game.FatAssholeEntity);
 		me.entityPool.add("confiscateDude", game.ConfiscateDudeEntity);
 		me.entityPool.add("boss", game.BossEntity);
+		me.entityPool.add("door", game.DoorEntity);
+		me.entityPool.add("lastCoin", game.LastCoinEntity);
+		me.entityPool.add("teleport", game.TeleportEntity);
+		me.entityPool.add("gameEnder", game.GameEnderEntity);
+		
 
 		me.input.bindKey(me.input.KEY.SPACE, "space");
 		this.enableKeys();

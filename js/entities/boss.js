@@ -48,8 +48,9 @@ game.BossEntity = me.ObjectEntity.extend({
       
       game.ParticleManager.addParticle(new_one);
     }
-    
+
     this.visible = false;
+    me.event.publish("UNLOCK:boss");
   },
 
   init: function(x, y, settings) {
@@ -81,7 +82,6 @@ game.BossEntity = me.ObjectEntity.extend({
     
     var now = me.timer.getTime();
     if (now - this.lastthrow >= this.rate) {
-      console.log(this.lastthrow, now);
       this.throwAtPlayer();
       this.lastthrow = now;
     }

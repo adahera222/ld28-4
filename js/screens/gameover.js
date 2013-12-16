@@ -58,3 +58,46 @@ game.GameOverScreen = me.ScreenObject.extend({
   }
 
 });
+
+var EndThign = me.Renderable.extend({
+  init: function() {
+
+    this.parent(new me.Vector2d(0, 0), 10, 10); 
+    this.img = me.loader.getImage("endinga");
+    this.floating = true;
+  },
+
+  update : function () {
+    // Never updates
+    return false;
+  },
+
+  /**
+   * draw the score
+   */
+  draw : function (ctx) {
+    if (! this.visible ) { return; }
+
+    ctx.drawImage(
+      this.img, 
+      0, 0, 
+      480, 320, 
+      0, 0,
+      480, 320
+    );
+  }
+});
+
+game.EndingScreen = me.ScreenObject.extend({
+
+  onResetEvent: function() {
+    var got = new EndThign();
+    me.game.world.addChild(got);
+  },
+
+  onDestroyEvent: function() {
+    // Honestly, should never happen. 
+    me.game.world.removeChild(got);
+  }
+
+});

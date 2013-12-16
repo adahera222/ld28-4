@@ -300,3 +300,50 @@ game.ConfiscateDudeEntity = me.ObjectEntity.extend({
     return true;
   }
 });
+
+game.LastCoinEntity = me.ObjectEntity.extend({
+
+  init: function(x, y, settings) {
+    // call the constructor
+    this.parent(x, y, settings);
+    
+    this.updateColRect(0, 16, -32, 64);
+    this.gravity = 0.25;
+
+    this.collidable = true;
+    this.type = game.CUTSCENE;
+
+    this.started = false;
+  },
+
+  startScene: function (player) {
+    if (this.started) { return; }
+    this.started = true;
+
+    // Yay, async recursion! :D
+    var self = this;
+    function nextString() {
+      if (!self.timed_strings.length) {
+        setTimeout(destroy, 500);
+        return;
+      }
+      var data = self.timed_strings.shift();
+      game.showText(data[0]);
+      setTimeout(nextString, data[1]);
+    }
+
+    function destroy() {
+      self.collidable = false;
+      game.enableKeys();
+    }
+
+    game.showText("last_coin");
+    me.event.publish("UNLOCK:enddoor");
+  },
+  
+  update: function() {
+    if (!this.started || !this.collidable) { return false; }
+
+    return true;
+  }
+});
